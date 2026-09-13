@@ -11,9 +11,9 @@ int main()
     cin>>f;
     cout<<"ingresa la candtidad de columnas: ";
     cin>>c;
+    srand(time(NULL));
     unsigned char *tablero=creacion_tablero1(f,c);
     unsigned short int total_bytes = ((f*c*3)+7)/8;
-    srand(time(NULL));
     while(estado!=0)
     {
         imprimir_tablero(tablero,f,c,total_bytes);

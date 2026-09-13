@@ -18,16 +18,7 @@ unsigned char * creacion_tablero1(unsigned short int f, unsigned short int c)
     {
         for(unsigned short int col=0;col<c;col++)
         {
-            unsigned short int valor=ficha_aleatoria();
-            unsigned int indice=fila*c+col;
-            unsigned int bit_inicial=indice*3;
-            unsigned int cual_byte=bit_inicial/8,cual_bit_byte=bit_inicial%8;
-            unsigned short int valor_en_pocision=(valor&0x07)<<cual_bit_byte;
-            tablero[cual_byte]|=valor_en_pocision&0xff;
-            if(cual_byte+1<total_bytes)
-            {
-                tablero[cual_byte+1]|=(valor_en_pocision>>8)&0xff;
-            }
+            guardar_ficha(tablero,c,fila,col,total_bytes,ficha_aleatoria());
         }
     }
     return tablero;
@@ -43,8 +34,7 @@ unsigned char ficha_aleatoria()
 unsigned char leer_ficha(unsigned char *tablero, unsigned short int c,unsigned short int fil,
                          unsigned short int col, unsigned short int total_bytes)
 {
-    unsigned int indice=fil*c+col;
-    unsigned int bit_inicial=indice*3;
+    unsigned int bit_inicial=(fil*c+col)*3;
     unsigned int cual_byte=bit_inicial/8,cual_bit_byte=bit_inicial%8;
     unsigned short int combinado=tablero[cual_byte];
     if(cual_byte+1<total_bytes)
@@ -60,11 +50,14 @@ void imprimir_tablero(unsigned char *tablero,unsigned short int f,
     for(unsigned short int fila=0;fila<f;fila++)
     {
         //cout<<fila <<"  |";
-        (fila<=9)? cout<<fila <<"  |" : cout<<fila <<" |";
+        // (fila<=9)? cout<<fila <<" |" : cout<<fila <<"|";
+        if(fila<=9)cout<<"  " <<fila<<"|";
+        else if(fila<=99)cout<<" " <<fila<<"|";
+        else cout<<fila <<"|";
         for(unsigned short int columna=0;columna<c;columna++)
         {
             unsigned char valor = leer_ficha(tablero, c,fila, columna,total_bytes);
-            cout<<figura[valor]<<" |";
+            cout<<" "<<figura[valor]<<" |";
         }
         cout<<endl;
     }
@@ -72,13 +65,31 @@ void imprimir_tablero(unsigned char *tablero,unsigned short int f,
     cout<<"   ";
     while(col<c)
     {
-        (col<=9)? cout<<"  "<<col : cout<<col <<" ";
+        //if(col==10)
+            //cout<<" ";
+        //(col>9)? cout<<col<<" ": cout<<" "<<col<<" ";
+        if(col<=9)cout<<"  "<<col<<" ";
+        else if(col<=99)cout<<"  "<<col;
+        else cout<<" "<<col;
         col++;
-
+    }
+    cout<<endl;
+    imprimir_bytes(tablero,total_bytes);
+}
+void imprimir_bytes(unsigned char *tablero,unsigned short int total_bytes)
+{
+    for(unsigned short int i=0;i<total_bytes;i++)
+    {
+        short int b=7;
+        while(b>0)
+        {
+            cout<<(unsigned short int)((tablero[i]>>b)&1);
+            b--;
+        }
+        cout<<"|";
     }
     cout<<endl;
 }
-
 void guardar_ficha(unsigned char *tablero,unsigned short int c,unsigned short int fil,
                    unsigned short int col,unsigned short int total_bytes, unsigned char valor)
 {

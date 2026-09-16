@@ -5,6 +5,7 @@ CONFIG -= qt
 
 SOURCES += \
         main.cpp \
+        operaciones_bits.cpp \
         tablero.cpp
 
 HEADERS += \

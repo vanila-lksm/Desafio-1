@@ -1,28 +1,27 @@
 #include <iostream>
 #include "funciones.h"
-#include <cstdlib>
 using namespace std;
 unsigned char leer_ficha(unsigned char *tablero,unsigned short int f,unsigned short int c,
                          unsigned short int fil,unsigned short int col)
 {
-    unsigned short int total_bytes = ((f*c*3)+7)/8;
+    unsigned short int total_bytes = ((f*c*3)+7)>>3;
     //unsigned int total_bytes=(((unsigned int)f*c*3)+7)/8;
     unsigned int bit_inicial=(fil*c+col)*3;
-    unsigned int cual_byte=bit_inicial/8,cual_bit_byte=bit_inicial%8;
+    unsigned int cual_byte=bit_inicial>>3,cual_bit_byte=bit_inicial&7;
     unsigned short int combinado=tablero[cual_byte];
     if(cual_byte+1<total_bytes)
-        combinado|=(tablero[cual_byte+1]<<8);
-    unsigned char ficha=(combinado>>cual_bit_byte)&0x07;
-    return ficha;
+      combinado |= (tablero[cual_byte + 1] << 8);
+
+    return (combinado >> cual_bit_byte) & 0x07;
 }
 
 void guardar_ficha(unsigned char *tablero,unsigned short int f,unsigned short int c,
                    unsigned short int fil,unsigned short int col,unsigned char valor)
 {
-    unsigned short int total_bytes=((f*c*3)+7)/8;
+    unsigned short int total_bytes=((f*c*3)+7)>>3;
     //unsigned int total_bytes=(((unsigned int)f*c*3)+7)/8;
     unsigned int bit_inicial=(fil*c+col)*3;
-    unsigned int cual_byte=bit_inicial/8,cual_bit_byte=bit_inicial%8;
+    unsigned int cual_byte=bit_inicial>>3,cual_bit_byte=bit_inicial&7;
     unsigned short int combinado=tablero[cual_byte];
     if(cual_byte+1<total_bytes)
         combinado|=(tablero[cual_byte+1]<<8);
@@ -64,4 +63,12 @@ unsigned short int leer_numero(const char *mensaje, unsigned short int min, unsi
         }
         return (unsigned short int)valor;
     }
+}
+void cascada (unsigned char *tablero, unsigned short int f, unsigned short int c,unsigned short int pos_fil, unsigned short int pos_col){
+    for (short int r = pos_fil; r > 0; r--)
+    {
+        unsigned char ficha_superior = leer_ficha(tablero, f, c, r - 1, pos_col);
+        guardar_ficha(tablero, f, c, r, pos_col, ficha_superior);
+    }
+    guardar_ficha(tablero, f, c, 0, pos_col, ficha_aleatoria());
 }

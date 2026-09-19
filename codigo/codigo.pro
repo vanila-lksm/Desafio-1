@@ -4,11 +4,16 @@ CONFIG -= app_bundle
 CONFIG -= qt
 
 SOURCES += \
-        eliminacion_combinaciones.cpp \
+        combinaciones_fichas.cpp \
+        imprimir.cpp \
         main.cpp \
-        modificacion_tablero.cpp \
-        operaciones_bits.cpp \
+        operacion_control.cpp \
+        operaciones_fichas.cpp \
         tablero.cpp
 
 HEADERS += \
-    funciones.h
+    combinaciones_fichas.h \
+    imprmir.h \
+    operacion_control.h \
+    operaciones_fichas.h \
+    tablero.h

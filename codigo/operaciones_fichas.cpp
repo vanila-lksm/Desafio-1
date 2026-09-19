@@ -1,11 +1,9 @@
-#include <iostream>
-#include "funciones.h"
-using namespace std;
+#include "operaciones_fichas.h"
+#include <cstdlib>
 unsigned char leer_ficha(unsigned char *tablero,unsigned short int f,unsigned short int c,
                          unsigned short int fil,unsigned short int col)
 {
-    unsigned short int total_bytes = ((f*c*3)+7)>>3;
-    //unsigned int total_bytes=(((unsigned int)f*c*3)+7)/8;
+    unsigned short int total_bytes = ((unsigned int)(f*c*3)+7)>>3;
     unsigned int bit_inicial=(fil*c+col)*3;
     unsigned int cual_byte=bit_inicial>>3,cual_bit_byte=bit_inicial&7;
     unsigned short int combinado=tablero[cual_byte];
@@ -18,8 +16,7 @@ unsigned char leer_ficha(unsigned char *tablero,unsigned short int f,unsigned sh
 void guardar_ficha(unsigned char *tablero,unsigned short int f,unsigned short int c,
                    unsigned short int fil,unsigned short int col,unsigned char valor)
 {
-    unsigned short int total_bytes=((f*c*3)+7)>>3;
-    //unsigned int total_bytes=(((unsigned int)f*c*3)+7)/8;
+    unsigned short int total_bytes=((unsigned int)(f*c*3)+7)>>3;
     unsigned int bit_inicial=(fil*c+col)*3;
     unsigned int cual_byte=bit_inicial>>3,cual_bit_byte=bit_inicial&7;
     unsigned short int combinado=tablero[cual_byte];
@@ -31,39 +28,7 @@ void guardar_ficha(unsigned char *tablero,unsigned short int f,unsigned short in
     if (cual_byte + 1 < total_bytes)
         tablero[cual_byte + 1] = (combinado >> 8) & 0xff;
 }
-unsigned short int leer_numero(const char *mensaje, unsigned short int min, unsigned short int max)
-{
-    char buffer[10];
-    while (true)
-    {
-        cout << mensaje;
-        cin.getline(buffer, 10);
-        if (cin.fail())
-        {
-            cin.clear();
-            cin.ignore(10000,'\n');
-            cout << "numero demasiado largo" << endl;
-            continue;
-        }
-        bool valido = (buffer[0] != '\0');
-        for (unsigned short int i = 0; buffer[i] != '\0'; i++)
-            if (buffer[i] < '0' || buffer[i] > '9') valido = false;
-        if (!valido)
-        {
-            cout << "entrada no valida: solo numeros" << endl;
-            continue;
-        }
-        unsigned int valor = 0;
-        for (unsigned short int i = 0; buffer[i] != '\0'; i++)
-            valor = valor*10 + (buffer[i] - '0');
-        if (valor < min || valor > max)
-        {
-            cout << "debe estar entre " << min << " y " << max << endl;
-            continue;
-        }
-        return (unsigned short int)valor;
-    }
-}
+
 void cascada (unsigned char *tablero, unsigned short int f, unsigned short int c,unsigned short int pos_fil, unsigned short int pos_col){
     for (short int r = pos_fil; r > 0; r--)
     {
@@ -71,4 +36,10 @@ void cascada (unsigned char *tablero, unsigned short int f, unsigned short int c
         guardar_ficha(tablero, f, c, r, pos_col, ficha_superior);
     }
     guardar_ficha(tablero, f, c, 0, pos_col, ficha_aleatoria());
+}
+unsigned char ficha_aleatoria()
+{
+    //funcion de una libreria para numeros del 1 a 6 (nuestar fichas)
+    unsigned char valor = 1+ (rand() % 6);
+    return valor;
 }

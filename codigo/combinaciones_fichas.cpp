@@ -1,25 +1,19 @@
-#include "funciones.h"
+#include "combinaciones_fichas.h"
+#include "operaciones_fichas.h"
 
-unsigned char * crear_marcas(unsigned short int f, unsigned short int c)
+
+void marcar_fichas(unsigned char *eliminaciones, unsigned int indice)
 {
-    unsigned int total = (f * c + 7) / 8;
-    unsigned char *marcas = new unsigned char[total];
-    for (unsigned int i = 0; i < total; i++) marcas[i] = 0;
-    return marcas;
+    eliminaciones[indice >>3] |= (1 << (indice &7));
 }
 
-void marcar(unsigned char *marcas, unsigned int indice)
+bool esta_marcada(unsigned char *eliminaciones, unsigned int indice)
 {
-    marcas[indice / 8] |= (1 << (indice % 8));
-}
-
-bool esta_marcada(unsigned char *marcas, unsigned int indice)
-{
-    return (marcas[indice / 8] >> (indice % 8)) & 1;
+    return (eliminaciones[indice >>3] >> (indice &7)) & 1;
 }
 
 unsigned short int combinaciones_filas(unsigned char *tablero,unsigned short int f,unsigned short int c,
-                         unsigned char *marcas)
+                         unsigned char *eliminaciones)
 {
     unsigned short int combinaciones=0;
     for(unsigned short int fila=0;fila<f;fila++)
@@ -28,22 +22,22 @@ unsigned short int combinaciones_filas(unsigned char *tablero,unsigned short int
         unsigned char valor=leer_ficha(tablero,f,c,fila,0);
         for(unsigned short int col=1;col<=c;col++)
         {
-            unsigned char actual=leer_ficha(tablero,f,c,fila,col);
-            if(col==c || valor!=actual)
+            unsigned char valor_actual = (col < c) ? leer_ficha(tablero,f,c,fila,col) : 0;
+            if(col==c || valor!=valor_actual)
             {
-                unsigned short int largo=col-inicio;
-                if(largo>=3)
+                unsigned short int largo_combinacion=col-inicio;
+                if(largo_combinacion>=3)
                 {
                     combinaciones++;
                     for (unsigned short int k = inicio; k < col; k++)
                     {
-                        marcar(marcas,fila*c+k);
+                        marcar_fichas(eliminaciones,fila*c+k);
                     }
                 }
                 if(col<c)
                 {
                     inicio=col;
-                    valor = actual;
+                    valor = valor_actual;
                 }
             }
         }
@@ -52,7 +46,7 @@ unsigned short int combinaciones_filas(unsigned char *tablero,unsigned short int
 }
 
 unsigned short int combinaciones_columna(unsigned char *tablero,unsigned short int f,unsigned short int c,
-                                       unsigned char *marcas)
+                                       unsigned char *eliminaciones)
 {
     unsigned short int combinaciones=0;
     for(unsigned short int col=0;col<c;col++)
@@ -61,8 +55,8 @@ unsigned short int combinaciones_columna(unsigned char *tablero,unsigned short i
         unsigned char valor=leer_ficha(tablero,f,c,0,col);
         for(unsigned short int fila=1;fila<=f;fila++)
         {
-            unsigned char actual=leer_ficha(tablero,f,c,fila,col);
-            if(fila==f || valor!=actual)
+            unsigned char valor_actual = (fila < f) ? leer_ficha(tablero,f,c,fila,col) : 0;
+            if(fila==f || valor!=valor_actual)
             {
                 unsigned short int largo=fila-inicio;
                 if(largo>=3)
@@ -70,13 +64,13 @@ unsigned short int combinaciones_columna(unsigned char *tablero,unsigned short i
                     combinaciones++;
                     for (unsigned short int k = inicio; k < fila; k++)
                     {
-                        marcar(marcas,k*c+col);
+                        marcar_fichas(eliminaciones,k*c+col);
                     }
                 }
                 if(fila<f)
                 {
                     inicio=fila;
-                    valor = actual;
+                    valor = valor_actual;
                 }
             }
         }
@@ -85,7 +79,7 @@ unsigned short int combinaciones_columna(unsigned char *tablero,unsigned short i
 }
 
 unsigned short int aplicar_eliminaciones(unsigned char *tablero,unsigned short int f, unsigned short int c,
-                           unsigned char *marcas,unsigned short int &cascadas)
+                           unsigned char *eliminaciones,unsigned short int &cascadas)
 {
     unsigned char cas='-';
     unsigned short int eliminadas=0;
@@ -93,7 +87,7 @@ unsigned short int aplicar_eliminaciones(unsigned char *tablero,unsigned short i
     {
         for(unsigned short int col=0;col<c;col++)
         {
-            if(esta_marcada(marcas,fila*c+col))
+            if(esta_marcada(eliminaciones,fila*c+col))
             {
                 if(fila==0)
                 {
@@ -112,21 +106,18 @@ unsigned short int aplicar_eliminaciones(unsigned char *tablero,unsigned short i
     if(cas=='+')cascadas++;
     return eliminadas;
 }
-void completar_tablero(unsigned char *tablero,unsigned short int f, unsigned short int c,
-                        unsigned short int &eliminadas,unsigned short int &combinaciones,unsigned short int &cascadas)
+void completar_tablero(unsigned char *tablero,unsigned char *eliminaciones,unsigned int magnitud_eliminaciones ,unsigned short int f, unsigned short int c,
+                        unsigned int &eliminadas,unsigned int &combinaciones,unsigned short int &cascadas)
 {
-    unsigned short int total = (f * c + 7) / 8;
-    unsigned char *marcas=new unsigned char[total]();
     while(true)
     {
-        for (unsigned int i = 0; i < total; i++) marcas[i] = 0;
-        unsigned short int combis=combinaciones_filas(tablero,f,c,marcas)+combinaciones_columna(tablero,f,c,marcas);
+        for(unsigned short int i=0;i<magnitud_eliminaciones;i++)eliminaciones[i]=0;
+        unsigned short int combis=combinaciones_filas(tablero,f,c,eliminaciones)+combinaciones_columna(tablero,f,c,eliminaciones);
         if(combis==0)
         {
             break;
         }
-            eliminadas+=aplicar_eliminaciones(tablero,f,c,marcas,cascadas);
+            eliminadas+=aplicar_eliminaciones(tablero,f,c,eliminaciones,cascadas);
             combinaciones+=combis;
     }
-    delete[] marcas;
 }

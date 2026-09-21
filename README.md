@@ -9,7 +9,7 @@
 
 -readme.md: archivo con toda la información de los contenidos del repositorio y las instrucciones para ejecutar el programa de manera correcta.
 
--commits: en este repositorio hay 7 commits que muestran el progreso del código teniendo un promedio de 2 días entre cada uno de ellos aquí les pasmos las fechas en orden de cada uno 1.07/09/2026 2.10/09/2026 3.11/09/2026 4.12/09/2026 5.15/09/2026 6.17/09/2026 7.19/09/2026.
+-commits: en este repositorio hay 13 commits que muestran el progreso del código teniendo un promedio de 2 días entre cada uno de ellos aquí les pasmos las fechas en orden de cada uno 1.07/09/2026 2.10/09/2026 3.11/09/2026 4.12/09/2026 5.15/09/2026 6.17/09/2026 7.19/09/2026. 8-13. 20/09/2026
 
 **** instrucciones para la correcta ejecución del programa ****
 

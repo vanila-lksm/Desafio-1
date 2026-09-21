@@ -15,7 +15,9 @@
 
 1. reglas en la entrada de variables: 
 *-Durante la ejecución del programa constantemente se le pedirá ingresar números ya sea para indicar ubicaciones dentro del tablero, crear el propio tablero ingresando la cantidad de filas y columnas del mismo o para seleccionar la accion que desea realizar para proseguir con el juego.
+
 *-Esta entrada esta delimitada a solo el ingreso de números, por tanto no se permite ningún tipo de letra, carácter especial o comandos; este recibimiento de datos esta protegido por la función validar_entrada() la cual les mostrara mensaje en caso de que lo que ingresen no sea un numero valido.
+
 **-para la correcta y fluida ejecución de este programa se deben respetar todos los rangos y condiciones especiales presentes en todas las partes que pidan el ingreso de información, la omisión de esta regla o el ingreso de caracteres inválidos no permitirán seguir adelante en ningún caso y deberá ingresar una entrada valida o se le pedirá constantemente el ingreso de esta.**
 
 2.paso a paso durante la ejecución: 

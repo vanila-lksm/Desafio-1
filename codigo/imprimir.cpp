@@ -6,7 +6,7 @@ using namespace std;
 void imprimir_tablero(unsigned char *tablero,unsigned short int f,
                       unsigned short int c)
 {
-    unsigned char figura[6]={'#','=','%','$','+','?'};
+    unsigned char figuras[6]={'#','=','%','$','+','?'};
     for(unsigned short int fila=0;fila<f;fila++)
     {
         if(fila<=9)cout<<"   " <<fila<<"|";
@@ -16,7 +16,7 @@ void imprimir_tablero(unsigned char *tablero,unsigned short int f,
         for(unsigned short int columna=0;columna<c;columna++)
         {
             unsigned char valor = leer_ficha(tablero,f,c,fila,columna);
-            cout<<figura[valor-1];
+            cout<<figuras[valor-1];
             if (columna < c-1) cout << "  ";
         }
         cout<<"|"<<endl;

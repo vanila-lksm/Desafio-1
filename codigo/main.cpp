@@ -19,6 +19,8 @@ int main()
     unsigned char *eliminaciones=new unsigned char[magnitud_eliminaciones];
     unsigned short int magnitud_tablero=((unsigned int)f*c*3+7)>>3,cascadas=0,movimientos_totales = 0;
     unsigned int eliminadas=0,combinaciones=0;
+    completar_tablero(tablero,eliminaciones,magnitud_eliminaciones,f,c,eliminadas,eliminadas,cascadas);
+    eliminadas=cascadas=0;
     while(true)
     {
         unsigned short int necesita = ((unsigned int)f * c + 7) >> 3;
@@ -34,7 +36,7 @@ int main()
         cout<<"--------------"<<endl;
         imprimir_bytes(tablero,f,c);
         cout<<"--------------"<<endl;
-        cout<<"*** fichas eliminadas: "<<eliminadas<<", combinaciones: "<<combinaciones<<", cascadas: "<<cascadas<<" juagadas: "<<movimientos_totales<< "***"<<endl;
+        cout<<"*** fichas eliminadas: "<<eliminadas<<", combinaciones: "<<combinaciones<<", cascadas: "<<cascadas<<" jugadas: "<<movimientos_totales<< "***"<<endl;
         cout<<"--------------"<<endl;
         decision=validar_entradas("que desea hacer? (0=cerrar programa, 1=eliminar ficha, 2=agregar fila,"
                                " 3=eliminar fila, 4=agregar columna,5=eliminar columna): ",0,5);
@@ -57,24 +59,24 @@ int main()
         }
         else if(decision==2)
         {
-            if (f >= 3494 || ((unsigned int)(f+1) * c  * 3 + 7) / 8 > 65535)
+            if (((unsigned int)(f+1) * c  * 3 + 7) / 8 > 65535)
             {
                 cout<<"***No hay memoria suficiente para agregar la fila***";
             }
             else
             {
-            fila=validar_entradas("en que posicion desea agregar la fila?: ",0,f);
-            tablero = agregar_fila(tablero,f,c,fila,magnitud_tablero);
-            movimientos_totales++;
+                fila=validar_entradas("en que posicion desea agregar la fila?: ",0,f);
+                tablero = agregar_fila(tablero,f,c,fila,magnitud_tablero);
+                movimientos_totales++;
             }
         }
         else if(decision==3)
         {
             if(f>1)
             {
-            fila=validar_entradas("que fila desea eliminar?: ",0,f-1);
-            tablero=eliminar_fila(tablero,f,c,fila,magnitud_tablero);
-            movimientos_totales++;
+                fila=validar_entradas("que fila desea eliminar?: ",0,f-1);
+                tablero=eliminar_fila(tablero,f,c,fila,magnitud_tablero);
+                movimientos_totales++;
             }
             else
             {
@@ -98,9 +100,9 @@ int main()
         {
             if(c>1)
             {
-            columna=validar_entradas("que columna desea eliminar?: ",0,c-1);
-            tablero = eliminar_columna(tablero,f,c,columna,magnitud_tablero);
-            movimientos_totales++;
+                columna=validar_entradas("que columna desea eliminar?: ",0,c-1);
+                tablero = eliminar_columna(tablero,f,c,columna,magnitud_tablero);
+                movimientos_totales++;
             }
             else
             {

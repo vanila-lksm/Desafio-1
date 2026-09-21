@@ -81,29 +81,29 @@ unsigned short int combinaciones_columna(unsigned char *tablero,unsigned short i
 unsigned short int aplicar_eliminaciones(unsigned char *tablero,unsigned short int f, unsigned short int c,
                            unsigned char *eliminaciones,unsigned short int &cascadas)
 {
-    unsigned char cas='-';
+    unsigned char cas;
     unsigned short int eliminadas=0;
-    for(unsigned short int fila=0;fila<f;fila++)
+    for(unsigned short int col=0;col<c;col++)
     {
-        for(unsigned short int col=0;col<c;col++)
+        cas='0';
+        for(unsigned short int fila=0;fila<f;fila++)
         {
             if(esta_marcada(eliminaciones,fila*c+col))
             {
                 if(fila==0)
                 {
                     guardar_ficha(tablero,f,c,fila,col,ficha_aleatoria());
-                    eliminadas++;
                 }
                 else
                 {
                     cascada(tablero,f,c,fila,col);
-                    eliminadas++;
-                    cas='+';
+                    cas='1';
                 }
+                eliminadas++;
             }
         }
+        if(cas=='1')cascadas++;
     }
-    if(cas=='+')cascadas++;
     return eliminadas;
 }
 void completar_tablero(unsigned char *tablero,unsigned char *eliminaciones,unsigned int magnitud_eliminaciones ,unsigned short int f, unsigned short int c,
